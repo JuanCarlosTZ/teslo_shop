@@ -16,7 +16,7 @@ class GeometricalBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final backgroundColor = Theme.of(context).colorScheme.background;
+    final backgroundColor = Theme.of(context).colorScheme.surface;
     final shadowSize = height ?? size.height * 0.3;
     final shadowFinish = shadowSize + size.height * 0.2;
 

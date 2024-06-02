@@ -15,7 +15,7 @@ class CustomGeometricalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final backgroundColor = Theme.of(context).colorScheme.background;
+    final backgroundColor = Theme.of(context).colorScheme.surface;
     final shadowSize = headerHeight ?? size.height * 0.3;
 
     return GestureDetector(

@@ -40,7 +40,7 @@ class CustomTextFormField extends StatelessWidget {
               bottomRight: borderRadius),
           boxShadow: [
             BoxShadow(
-                color: colors.onBackground.withOpacity(0.1),
+                color: colors.onSurface.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 5))
           ]),
