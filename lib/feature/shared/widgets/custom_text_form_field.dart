@@ -29,21 +29,22 @@ class CustomTextFormField extends StatelessWidget {
     );
 
     const borderRadius = Radius.circular(15);
+    final boxDecoration = BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+            topLeft: borderRadius,
+            bottomLeft: borderRadius,
+            bottomRight: borderRadius),
+        boxShadow: [
+          BoxShadow(
+              color: colors.onSurface.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5))
+        ]);
 
     return Container(
       // padding: const EdgeInsets.only(bottom: 0, top: 15),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
-              topLeft: borderRadius,
-              bottomLeft: borderRadius,
-              bottomRight: borderRadius),
-          boxShadow: [
-            BoxShadow(
-                color: colors.onSurface.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 5))
-          ]),
+      decoration: boxDecoration,
       child: TextFormField(
         onChanged: onChanged,
         validator: validator,
@@ -55,10 +56,8 @@ class CustomTextFormField extends StatelessWidget {
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
           enabledBorder: border,
           focusedBorder: border,
-          errorBorder: border.copyWith(
-              borderSide: BorderSide(color: Colors.red.shade800)),
-          focusedErrorBorder: border.copyWith(
-              borderSide: BorderSide(color: Colors.red.shade800)),
+          errorBorder: border,
+          focusedErrorBorder: border.copyWith(borderSide: BorderSide.none),
           isDense: true,
           label: label != null ? Text(label!) : null,
           hintText: hint,
