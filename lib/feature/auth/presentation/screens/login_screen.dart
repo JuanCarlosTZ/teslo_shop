@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/feature/auth/presentation/providers/login_form_riverpod.dart';
 
 import 'package:teslo_shop/feature/shared/shared.dart';
@@ -86,7 +87,7 @@ class _FormView extends ConsumerWidget {
               const Text('¿No tienes cuenta?'),
               TextButton(
                   onPressed: () {
-                    context.push('/register');
+                    context.push(PathParameter.registerPath);
                   },
                   child: const Text('Crea una aquí')),
             ],

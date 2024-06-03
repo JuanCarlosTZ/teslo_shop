@@ -17,8 +17,8 @@ class LoginFormState {
   final bool isValid;
 
   LoginFormState({
-    this.email = const Email.pure('', isRequired: true, hardError: true),
-    this.password = const Password.pure('', isRequired: true, hardError: true),
+    this.email = const Email.pure('', isRequired: true),
+    this.password = const Password.pure('', isRequired: true),
     this.isPosting = false,
     this.isPosted = false,
     this.isValid = false,

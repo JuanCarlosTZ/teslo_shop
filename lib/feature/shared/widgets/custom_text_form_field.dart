@@ -42,6 +42,13 @@ class CustomTextFormField extends StatelessWidget {
               offset: const Offset(0, 5))
         ]);
 
+    final customLabel = Row(
+      children: [
+        Text(label!),
+        Icon(Icons.star, color: Colors.red.shade700, size: 10)
+      ],
+    );
+
     return Container(
       // padding: const EdgeInsets.only(bottom: 0, top: 15),
       decoration: boxDecoration,
@@ -59,7 +66,7 @@ class CustomTextFormField extends StatelessWidget {
           errorBorder: border,
           focusedErrorBorder: border.copyWith(borderSide: BorderSide.none),
           isDense: true,
-          label: label != null ? Text(label!) : null,
+          label: label != null ? customLabel : null,
           hintText: hint,
           errorText: errorMessage,
           focusColor: colors.primary,

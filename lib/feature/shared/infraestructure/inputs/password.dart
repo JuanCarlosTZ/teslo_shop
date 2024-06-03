@@ -4,26 +4,26 @@ enum PasswordError { required, lengthMin, uppercase, lowercase, number }
 
 class Password extends FormzInput<String, PasswordError?> {
   final bool isRequired;
-  final bool hardError;
+  final bool hardValidate;
   static int lengthMin = 6;
   static int lengthMax = 100;
 
   const Password.pure(
     super.value, {
     this.isRequired = false,
-    this.hardError = false,
+    this.hardValidate = false,
   }) : super.pure();
   const Password.dirty(
     super.value, {
     this.isRequired = false,
-    this.hardError = false,
+    this.hardValidate = false,
   }) : super.dirty();
 
   @override
   PasswordError? validator(String value) {
     if (value.isEmpty && !isRequired) return null;
     if (value.isEmpty && isRequired) return PasswordError.required;
-    if (!hardError) return null;
+    if (!hardValidate) return null;
     if (value.length <= lengthMin) return PasswordError.lengthMin;
     if (!containsLowercase(value)) return PasswordError.lowercase;
     if (!containsUppercase(value)) return PasswordError.uppercase;
@@ -59,12 +59,12 @@ class Password extends FormzInput<String, PasswordError?> {
   Password copyWith(
     String? value, {
     bool? isRequired,
-    bool? hardError,
+    bool? hardValidate,
   }) {
     return Password.dirty(
       value ?? this.value,
       isRequired: isRequired ?? this.isRequired,
-      hardError: hardError ?? this.hardError,
+      hardValidate: hardValidate ?? this.hardValidate,
     );
   }
 }
