@@ -1,13 +1,54 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
+
+import 'package:teslo_shop/feature/auth/auth.dart';
 import 'package:teslo_shop/feature/shared/shared.dart';
 
 final loginFormProvider =
     StateNotifierProvider.autoDispose<LoginFormNotifier, LoginFormState>(
   (ref) {
-    return LoginFormNotifier();
+    final loginCallback = ref.watch(authUserProvider.notifier).loginUser;
+    return LoginFormNotifier(loginCallback: loginCallback);
   },
 );
+
+class LoginFormNotifier extends StateNotifier<LoginFormState> {
+  final Function({
+    required String email,
+    required String password,
+  }) loginCallback;
+  LoginFormNotifier({required this.loginCallback}) : super(LoginFormState());
+
+  void onEmailChange(String value) {
+    final newState = state.copyWith(email: state.email.copyWith(value));
+    state = newState;
+  }
+
+  void onPasswordChange(String value) {
+    final newState = state.copyWith(password: state.password.copyWith(value));
+    state = newState;
+  }
+
+  void onSubmitted() {
+    bool isValid = Formz.validate([
+      state.email,
+      state.password,
+    ]);
+
+    final newState = state.copyWith(
+      email: state.email.copyWith(null),
+      password: state.password.copyWith(null),
+      isValid: isValid,
+      isPosted: true,
+    );
+    state = newState;
+
+    loginCallback(
+      email: state.email.value,
+      password: state.password.value,
+    );
+  }
+}
 
 class LoginFormState {
   final Email email;
@@ -49,35 +90,5 @@ class LoginFormState {
       isPosted: $isPosted,
       isValid: $isValid,
     """;
-  }
-}
-
-class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  LoginFormNotifier() : super(LoginFormState());
-
-  void onEmailChange(String value) {
-    final newState = state.copyWith(email: state.email.copyWith(value));
-    state = newState;
-  }
-
-  void onPasswordChange(String value) {
-    final newState = state.copyWith(password: state.password.copyWith(value));
-    state = newState;
-  }
-
-  void onSubmitted() {
-    bool isValid = Formz.validate([
-      state.email,
-      state.password,
-    ]);
-
-    final newState = state.copyWith(
-      email: state.email.copyWith(null),
-      password: state.password.copyWith(null),
-      isValid: isValid,
-      isPosted: true,
-    );
-    state = newState;
-    print(state);
   }
 }

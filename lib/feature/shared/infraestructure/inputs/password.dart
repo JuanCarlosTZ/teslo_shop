@@ -24,7 +24,7 @@ class Password extends FormzInput<String, PasswordError?> {
     if (value.isEmpty && !isRequired) return null;
     if (value.isEmpty && isRequired) return PasswordError.required;
     if (!hardValidate) return null;
-    if (value.length <= lengthMin) return PasswordError.lengthMin;
+    if (value.length < lengthMin) return PasswordError.lengthMin;
     if (!containsLowercase(value)) return PasswordError.lowercase;
     if (!containsUppercase(value)) return PasswordError.uppercase;
     if (!containsNumber(value)) return PasswordError.number;
@@ -38,7 +38,7 @@ class Password extends FormzInput<String, PasswordError?> {
     if (error == PasswordError.required) return 'Required password';
 
     if (error == PasswordError.lengthMin) {
-      return 'Password must be more than $lengthMin';
+      return 'Password must be more or equal than $lengthMin';
     }
 
     if (error == PasswordError.lowercase) {
