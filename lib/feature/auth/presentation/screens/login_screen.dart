@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:teslo_shop/config/config.dart';
-import 'package:teslo_shop/feature/auth/presentation/providers/login_form_riverpod.dart';
 
+import 'package:teslo_shop/config/config.dart';
+import 'package:teslo_shop/feature/auth/auth.dart';
 import 'package:teslo_shop/feature/shared/shared.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -36,8 +36,24 @@ class _LoginView extends StatelessWidget {
 class _FormView extends ConsumerWidget {
   const _FormView();
 
+  showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AuthUserState>(authUserProvider, (prev, next) {
+      if (next.status == AuthStatus.authorized) {
+        showSnackbar(context, 'Sesión iniciada');
+        return;
+      }
+
+      showSnackbar(context, next.message);
+    });
+
     final textStyles = Theme.of(context).textTheme;
     final isPosted = ref.watch(loginFormProvider).isPosted;
 

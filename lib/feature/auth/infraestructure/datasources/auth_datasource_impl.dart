@@ -19,14 +19,17 @@ class AuthDatasourceImpl extends AuthDatasource {
     required String email,
     required String password,
   }) async {
-    //TODO manejo de errores
-    final response = await dio.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
+    return AuthErrorHandle.handleDioError(
+      () async {
+        final response = await dio.post('/auth/login', data: {
+          'email': email,
+          'password': password,
+        });
 
-    final user = UserMapper.userJsonToEntity(response.data);
-    return user;
+        final user = UserMapper.userJsonToEntity(response.data);
+        return user;
+      },
+    );
   }
 
   @override
@@ -35,14 +38,17 @@ class AuthDatasourceImpl extends AuthDatasource {
     required String email,
     required String password,
   }) async {
-    //TODO manejo de errores
-    final response = await dio.post('/auth/register', data: {
-      'username': username,
-      'email': email,
-      'password': password,
-    });
+    return AuthErrorHandle.handleDioError(
+      () async {
+        final response = await dio.post('/auth/register', data: {
+          'fullName': username,
+          'email': email,
+          'password': password,
+        });
 
-    final user = UserMapper.userJsonToEntity(response.data);
-    return user;
+        final user = UserMapper.userJsonToEntity(response.data);
+        return user;
+      },
+    );
   }
 }

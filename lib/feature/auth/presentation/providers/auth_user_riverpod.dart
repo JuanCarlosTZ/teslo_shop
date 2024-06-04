@@ -21,7 +21,14 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
       user: user,
       message: '',
     );
-    print(state);
+  }
+
+  void _setLogoutUser(String message) {
+    state = AuthUserState(
+      status: AuthStatus.notAuthorized,
+      user: null,
+      message: message,
+    );
   }
 
   Future<void> loginUser({
@@ -29,13 +36,17 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
     required String password,
   }) async {
     await Future.delayed(Durations.long2);
+    try {
+      final user = await repository.loginUser(
+        email: email,
+        password: password,
+      );
 
-    final user = await repository.loginUser(
-      email: email,
-      password: password,
-    );
-
-    _setLogedUser(user);
+      _setLogedUser(user);
+    } catch (e) {
+      final errorMessage = AuthErrorHandle.getErrorMessage(e as Exception);
+      _setLogoutUser(errorMessage);
+    }
   }
 
   Future<void> registerUser({
@@ -43,14 +54,19 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
     required String email,
     required String password,
   }) async {
-    await Future.delayed(Durations.long2);
-    final user = await repository.registerUser(
-      username: username,
-      email: email,
-      password: password,
-    );
+    try {
+      await Future.delayed(Durations.long2);
+      final user = await repository.registerUser(
+        username: username,
+        email: email,
+        password: password,
+      );
 
-    _setLogedUser(user);
+      _setLogedUser(user);
+    } catch (e) {
+      final errorMessage = AuthErrorHandle.getErrorMessage(e as Exception);
+      _setLogoutUser(errorMessage);
+    }
   }
 }
 
