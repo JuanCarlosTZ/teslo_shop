@@ -29,7 +29,7 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     state = newState;
   }
 
-  void onSubmitted() {
+  void onSubmitted() async {
     bool isValid = Formz.validate([
       state.email,
       state.password,
@@ -40,13 +40,17 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
       password: state.password.copyWith(null),
       isValid: isValid,
       isPosted: true,
+      isPosting: true,
     );
+
     state = newState;
 
-    loginCallback(
+    await loginCallback(
       email: state.email.value,
       password: state.password.value,
     );
+
+    state = state.copyWith(isPosting: false);
   }
 }
 

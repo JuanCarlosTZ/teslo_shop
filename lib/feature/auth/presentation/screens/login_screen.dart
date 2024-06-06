@@ -45,7 +45,7 @@ class _FormView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<AuthUserState>(authUserProvider, (prev, next) {
+    ref.listen<AuthUserState>(authUserProvider, (previous, next) {
       if (next.status == AuthStatus.authorized) {
         showSnackbar(context, 'Sesión iniciada');
         return;
@@ -55,7 +55,9 @@ class _FormView extends ConsumerWidget {
     });
 
     final textStyles = Theme.of(context).textTheme;
-    final isPosted = ref.watch(loginFormProvider).isPosted;
+    final loginForm = ref.watch(loginFormProvider);
+    final isPosted = loginForm.isPosted;
+    final isPosting = loginForm.isPosting;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
@@ -91,12 +93,20 @@ class _FormView extends ConsumerWidget {
             text: 'Iniciar sesión',
             buttonColor: Colors.black,
             expanded: true,
-            onPressed: () {
-              ref.read(loginFormProvider.notifier).onSubmitted();
-            },
+            onPressed: isPosting
+                ? null
+                : ref.read(loginFormProvider.notifier).onSubmitted,
           ),
 
-          const SizedBox(height: 100),
+          const SizedBox(height: 10),
+
+          isPosting
+              ? const SizedBox(
+                  height: 60, child: Center(child: CircularProgressIndicator()))
+              : const SizedBox(
+                  height: 60,
+                ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -11,7 +11,19 @@ class AuthDatasourceImpl extends AuthDatasource {
 
   @override
   Future<User> checkAuth({required String token}) async {
-    throw UnimplementedError();
+    return AuthErrorHandle.handleDioError(
+      () async {
+        final response = await dio.get(
+          '/auth/check-status',
+          options: Options(headers: {
+            'authorization': 'Bearer $token',
+          }),
+        );
+
+        final user = UserMapper.userJsonToEntity(response.data);
+        return user;
+      },
+    );
   }
 
   @override

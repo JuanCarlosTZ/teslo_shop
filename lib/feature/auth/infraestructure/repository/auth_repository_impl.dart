@@ -8,7 +8,7 @@ class AuthRepositoryImpl extends AuthRepository {
       : datasource = datasource ?? AuthDatasourceImpl();
 
   @override
-  Future<User> checkAuth({required String token}) async {
+  Future<User> checkAuthUser({required String token}) async {
     return await datasource.checkAuth(token: token);
   }
 

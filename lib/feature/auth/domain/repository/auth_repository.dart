@@ -9,5 +9,5 @@ abstract class AuthRepository {
     required String password,
   });
 
-  Future<User> checkAuth({required String token});
+  Future<User> checkAuthUser({required String token});
 }

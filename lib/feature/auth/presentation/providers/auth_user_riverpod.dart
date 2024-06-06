@@ -2,33 +2,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/feature/auth/domain/domains.dart';
 import 'package:teslo_shop/feature/auth/infraestructure/infraestructures.dart';
+import 'package:teslo_shop/feature/shared/infraestructure/infraestructures.dart';
 
 final authUserProvider = StateNotifierProvider<AuthUserNotifier, AuthUserState>(
   (ref) {
-    final repository = AuthRepositoryImpl();
-    return AuthUserNotifier(repository: repository);
+    final authRepository = AuthRepositoryImpl();
+    final prefsRepository = KeyValuePreferenceRepositoryImpl();
+    return AuthUserNotifier(
+      authRepository: authRepository,
+      prefsRepository: prefsRepository,
+    );
   },
 );
 
 class AuthUserNotifier extends StateNotifier<AuthUserState> {
-  final AuthRepository repository;
-  AuthUserNotifier({required this.repository}) : super(AuthUserState());
+  final AuthRepository authRepository;
+  final KeyValuePreferenceRepositoryImpl prefsRepository;
+  AuthUserNotifier({
+    required this.authRepository,
+    required this.prefsRepository,
+  }) : super(AuthUserState()) {
+    _checkLoggedUser();
+  }
 
-  void _setLogedUser(User user) {
-    //TODO almanecer token fisicamente
+  void _checkLoggedUser() async {
+    await Future.delayed(Durations.long2);
+
+    try {
+      final token = await prefsRepository.getValue<String>('token');
+      if (token == null || token.isEmpty) return setLogoutUser();
+
+      await checkAuthUser(token: token);
+    } catch (e) {
+      setLogoutUser();
+    }
+  }
+
+  void _setLoggedUser(User user) async {
+    try {
+      await prefsRepository.setKeyValue('token', user.token);
+    } catch (e) {
+      print(e.toString());
+    }
+
     state = AuthUserState(
       status: AuthStatus.authorized,
       user: user,
       message: '',
     );
+
+    print(state);
   }
 
-  void _setLogoutUser(String message) {
+  void setLogoutUser({String? message}) async {
+    try {
+      await prefsRepository.removeKey('token');
+    } catch (e) {
+      print(e.toString());
+    }
     state = AuthUserState(
       status: AuthStatus.notAuthorized,
       user: null,
-      message: message,
+      message: message ?? '',
     );
+  }
+
+  Future<void> checkAuthUser({required String token}) async {
+    await Future.delayed(Durations.long2);
+    try {
+      final user = await authRepository.checkAuthUser(token: token);
+
+      _setLoggedUser(user);
+    } catch (e) {
+      final errorMessage = AuthErrorHandle.getErrorMessage(e as Exception);
+      setLogoutUser(message: errorMessage);
+    }
   }
 
   Future<void> loginUser({
@@ -37,15 +85,15 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
   }) async {
     await Future.delayed(Durations.long2);
     try {
-      final user = await repository.loginUser(
+      final user = await authRepository.loginUser(
         email: email,
         password: password,
       );
 
-      _setLogedUser(user);
+      _setLoggedUser(user);
     } catch (e) {
       final errorMessage = AuthErrorHandle.getErrorMessage(e as Exception);
-      _setLogoutUser(errorMessage);
+      setLogoutUser(message: errorMessage);
     }
   }
 
@@ -56,16 +104,16 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
   }) async {
     try {
       await Future.delayed(Durations.long2);
-      final user = await repository.registerUser(
+      final user = await authRepository.registerUser(
         username: username,
         email: email,
         password: password,
       );
 
-      _setLogedUser(user);
+      _setLoggedUser(user);
     } catch (e) {
       final errorMessage = AuthErrorHandle.getErrorMessage(e as Exception);
-      _setLogoutUser(errorMessage);
+      setLogoutUser(message: errorMessage);
     }
   }
 }
@@ -78,7 +126,7 @@ class AuthUserState {
   final String message;
 
   AuthUserState({
-    this.status = AuthStatus.notAuthorized,
+    this.status = AuthStatus.checking,
     this.user,
     this.message = '',
   });
