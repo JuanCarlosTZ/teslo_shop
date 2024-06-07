@@ -33,19 +33,25 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
 
     state = state.copyWith(
       isLoading: false,
+      isRefreshing: false,
       page: state.page + 1,
-      products: [...state.products, ...products],
+      products:
+          state.isRefreshing ? products : [...state.products, ...products],
     );
   }
 
   Future<void> refresh() async {
-    state = ProductsState();
+    if (state.isLoading) return;
+
+    state = ProductsState(isRefreshing: true, products: state.products);
+
     await loadNextPage();
   }
 }
 
 class ProductsState {
   final bool isLoading;
+  final bool isRefreshing;
   final bool isLastPage;
   final int page;
   final int itemsByPage;
@@ -53,6 +59,7 @@ class ProductsState {
 
   ProductsState({
     this.isLoading = false,
+    this.isRefreshing = false,
     this.isLastPage = false,
     this.page = 0,
     this.itemsByPage = 10,
@@ -61,12 +68,14 @@ class ProductsState {
 
   ProductsState copyWith({
     bool? isLoading,
+    bool? isRefreshing,
     bool? isLastPage,
     int? page,
     List<Product>? products,
   }) {
     return ProductsState(
       isLoading: isLoading ?? this.isLoading,
+      isRefreshing: isRefreshing ?? this.isRefreshing,
       isLastPage: isLastPage ?? this.isLastPage,
       page: page ?? this.page,
       products: products ?? this.products,

@@ -71,34 +71,37 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: RefreshIndicator(
           onRefresh: ref.read(productsProvider.notifier).refresh,
-          child: SingleChildScrollView(
-            controller: controller,
-            child: Column(
-              children: [
-                MasonryView(
-                  listOfItem: productsState.products,
-                  numberOfColumn: size.width > 800 ? 3 : 2,
-                  itemRadius: 0,
-                  itemBuilder: (item) {
-                    if (item.runtimeType != Product) return const SizedBox();
-                    final product = item as Product;
+          child: SizedBox.expand(
+            child: SingleChildScrollView(
+              controller: controller,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  MasonryView(
+                    listOfItem: productsState.products,
+                    numberOfColumn: size.width > 800 ? 3 : 2,
+                    itemRadius: 0,
+                    itemBuilder: (item) {
+                      if (item.runtimeType != Product) return const SizedBox();
+                      final product = item as Product;
 
-                    ///*Product Item
-                    return GestureDetector(
-                        onTap: () =>
-                            context.go(PathParameter.productPath(product.id)),
-                        child: _ProductItem(product: product));
-                  },
-                ),
+                      ///*Product Item
+                      return GestureDetector(
+                          onTap: () =>
+                              context.go(PathParameter.productPath(product.id)),
+                          child: _ProductItem(product: product));
+                    },
+                  ),
 
-                ///*Loading next page indicator
-                SizedBox(
-                  height: 60,
-                  child: productsState.isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : const SizedBox(),
-                )
-              ],
+                  ///*Loading next page indicator
+                  SizedBox(
+                    height: 150,
+                    child: productsState.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : const SizedBox(),
+                  )
+                ],
+              ),
             ),
           ),
         ),
