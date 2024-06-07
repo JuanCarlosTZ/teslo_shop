@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/feature/auth/auth.dart';
 import 'package:teslo_shop/feature/shared/widgets/custom_filled_button.dart';

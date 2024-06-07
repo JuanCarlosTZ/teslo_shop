@@ -5,7 +5,9 @@ class Environment {
     await dotenv.load(fileName: ".env");
   }
 
-  static String apiUrl() => dotenv.env['API_URL'] ?? '';
-  static String contentType() => dotenv.env['CONTENT_TYPE'] ?? '';
-  static String accept() => dotenv.env['ACCEPT'] ?? '';
+  static String get apiUrl => dotenv.env['API_URL'] ?? '';
+  static String get contentType => dotenv.env['CONTENT_TYPE'] ?? '';
+  static String get accept => dotenv.env['ACCEPT'] ?? '';
+  static String get _productImagePath => dotenv.env['PRODUCT_IMAGE_PATH'] ?? '';
+  static String get apiProductImageUrl => '$apiUrl$_productImagePath';
 }

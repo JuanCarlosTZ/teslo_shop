@@ -42,7 +42,7 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
     try {
       await prefsRepository.setKeyValue('token', user.token);
     } catch (e) {
-      print(e.toString());
+      throw UnimplementedError(e.toString());
     }
 
     state = AuthUserState(
@@ -50,15 +50,13 @@ class AuthUserNotifier extends StateNotifier<AuthUserState> {
       user: user,
       message: '',
     );
-
-    print(state);
   }
 
   void setLogoutUser({String? message}) async {
     try {
       await prefsRepository.removeKey('token');
     } catch (e) {
-      print(e.toString());
+      throw UnimplementedError(e.toString());
     }
     state = AuthUserState(
       status: AuthStatus.notAuthorized,

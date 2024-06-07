@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:teslo_shop/config/config.dart';
-import 'package:teslo_shop/config/router/auth_change_notifier_riverpod.dart';
-import 'package:teslo_shop/feature/product/product.dart';
+import 'package:teslo_shop/feature/product/products.dart';
 import '../../feature/auth/auth.dart';
 
 final appRouteProvider = StateProvider((ref) {
@@ -39,18 +38,27 @@ final appRouteProvider = StateProvider((ref) {
 
       ///* Product Routes
       GoRoute(
-        path: PathParameter.productsPath,
-        builder: (context, state) => const ProductScreen(),
-      ),
+          path: PathParameter.productsPath,
+          builder: (context, state) => const ProductsScreen(),
+          routes: [
+            GoRoute(
+              path: PathParameter.productPath()
+                  .replaceAll('${PathParameter.productsPath}/', ''),
+              builder: (context, state) {
+                final productId =
+                    state.pathParameters[PathParameter.productId] ??
+                        PathParameter.withOutId;
+
+                return ProductScreen(productId: productId);
+              },
+            ),
+          ]),
     ],
 
     ///* Routes protection
     redirect: (context, state) {
       final isGoingTo = state.matchedLocation;
       final status = authChangeNotifier.authStatus;
-
-      print(isGoingTo);
-      print(status);
 
       switch (status) {
         case AuthStatus.checking:
