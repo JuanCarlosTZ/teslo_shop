@@ -47,6 +47,14 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
 
     await loadNextPage();
   }
+
+  void updateProduct({required Product product}) {
+    final products = state.products.map((productItem) {
+      return (productItem.id == product.id) ? product : productItem;
+    }).toList();
+
+    state = state.copyWith(products: products);
+  }
 }
 
 class ProductsState {
