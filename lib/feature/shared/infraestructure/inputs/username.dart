@@ -36,8 +36,8 @@ class Username extends FormzInput<String, UsernameError?> {
     return null;
   }
 
-  Username copyWith(
-    String? value, {
+  Username copyWith({
+    String? value,
     bool? isRequired,
   }) {
     return Username.dirty(

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/feature/auth/infraestructure/infraestructures.dart';
 
-class AuthErrorHandle {
+class ProductErrorHandle {
   static Future<T> handleDioError<T>(Future<T> Function() request) async {
     if (!await NetworkService.isInternetConnected()) {
       throw CustomError(
@@ -28,10 +28,19 @@ class AuthErrorHandle {
       return ConnectionTimeout();
     }
 
-    if (e.response?.statusCode == 401 || e.response?.statusCode == 400) {
+    if (e.response?.statusCode == 401) {
       return WrongCredentials();
     }
-    return Exception();
+
+    if (e.response?.statusCode == 400) {
+      const message = 'El título del producto ya existe';
+      throw CustomError(
+        message: message,
+        logRequired: false,
+      );
+    }
+
+    return Exception(e);
   }
 
   static String getErrorMessage(Exception e) {

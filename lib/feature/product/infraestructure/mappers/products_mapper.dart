@@ -1,7 +1,7 @@
 import 'package:teslo_shop/config/constants/environment.dart';
 import 'package:teslo_shop/feature/auth/infraestructure/infraestructures.dart';
 import 'package:teslo_shop/feature/product/domain/domains.dart';
-import 'package:teslo_shop/feature/product/infraestructure/instraestructures.dart';
+import 'package:teslo_shop/feature/product/infraestructure/intraestructures.dart';
 
 class ProductsMapper {
   static Product jsonProcuctToEntity(Map<String, dynamic> json) {
@@ -30,6 +30,7 @@ class ProductsMapper {
 
   static Map<String, dynamic> productPayloadToJson(ProductPayload payload) {
     return <String, dynamic>{
+      "id": payload.productId,
       "title": payload.title,
       "price": payload.price,
       "description": payload.description,
@@ -42,5 +43,20 @@ class ProductsMapper {
         return image.replaceAll('${Environment.apiProductImageUrl}/', '');
       }).toList(),
     };
+  }
+
+  static ProductPayload productEntityToPayload(Product product) {
+    return ProductPayload(
+      productId: product.id,
+      title: product.title,
+      price: product.price,
+      description: product.description,
+      slug: product.slug,
+      stock: product.stock,
+      sizes: product.sizes,
+      gender: product.gender,
+      tags: product.tags,
+      images: product.images,
+    );
   }
 }

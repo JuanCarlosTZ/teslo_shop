@@ -42,8 +42,7 @@ final appRouteProvider = StateProvider((ref) {
           builder: (context, state) => const ProductsScreen(),
           routes: [
             GoRoute(
-              path: PathParameter.productPath()
-                  .replaceAll('${PathParameter.productsPath}/', ''),
+              path: PathParameter.productPath,
               builder: (context, state) {
                 final productId =
                     state.pathParameters[PathParameter.productId] ??

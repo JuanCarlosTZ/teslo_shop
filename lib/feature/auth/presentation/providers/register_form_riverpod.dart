@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:teslo_shop/feature/auth/auth.dart';
-import 'package:teslo_shop/feature/shared/infraestructure/inputs/confirm_password.dart';
 import 'package:teslo_shop/feature/shared/shared.dart';
 
 final registerFormProvider =
@@ -23,23 +22,23 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
       : super(RegisterFormState());
 
   void onUsernameChange(String value) {
-    final newState = state.copyWith(username: state.username.copyWith(value));
+    final newState =
+        state.copyWith(username: state.username.copyWith(value: value));
     state = newState;
   }
 
   void onEmailChange(String value) {
-    final newState = state.copyWith(email: state.email.copyWith(value));
+    final newState = state.copyWith(email: state.email.copyWith(value: value));
     state = newState;
   }
 
   void onPasswordChange(String value) {
     final confirmPassword = state.confirmPassword.copyWith(
-      null,
       password: value,
     );
 
     final newState = state.copyWith(
-      password: state.password.copyWith(value),
+      password: state.password.copyWith(value: value),
       confirmPassword: confirmPassword,
     );
 
@@ -47,8 +46,8 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
   }
 
   void onConfirmPasswordChange(String value) {
-    final newState =
-        state.copyWith(confirmPassword: state.confirmPassword.copyWith(value));
+    final newState = state.copyWith(
+        confirmPassword: state.confirmPassword.copyWith(value: value));
     state = newState;
   }
 
@@ -61,10 +60,10 @@ class RegisterFormNotifier extends StateNotifier<RegisterFormState> {
     ]);
 
     final newState = state.copyWith(
-      username: state.username.copyWith(null),
-      email: state.email.copyWith(null),
-      password: state.password.copyWith(null),
-      confirmPassword: state.confirmPassword.copyWith(null),
+      username: state.username.copyWith(),
+      email: state.email.copyWith(),
+      password: state.password.copyWith(),
+      confirmPassword: state.confirmPassword.copyWith(),
       isValid: isValid,
       isPosted: true,
     );

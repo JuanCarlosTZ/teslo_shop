@@ -20,12 +20,13 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
   LoginFormNotifier({required this.loginCallback}) : super(LoginFormState());
 
   void onEmailChange(String value) {
-    final newState = state.copyWith(email: state.email.copyWith(value));
+    final newState = state.copyWith(email: state.email.copyWith(value: value));
     state = newState;
   }
 
   void onPasswordChange(String value) {
-    final newState = state.copyWith(password: state.password.copyWith(value));
+    final newState =
+        state.copyWith(password: state.password.copyWith(value: value));
     state = newState;
   }
 
@@ -36,8 +37,8 @@ class LoginFormNotifier extends StateNotifier<LoginFormState> {
     ]);
 
     final newState = state.copyWith(
-      email: state.email.copyWith(null),
-      password: state.password.copyWith(null),
+      email: state.email.copyWith(),
+      password: state.password.copyWith(),
       isValid: isValid,
       isPosted: true,
       isPosting: true,

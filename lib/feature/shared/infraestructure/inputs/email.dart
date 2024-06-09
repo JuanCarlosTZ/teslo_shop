@@ -1,4 +1,5 @@
 import 'package:formz/formz.dart';
+import 'package:teslo_shop/config/config.dart';
 
 enum EmailError { required, lengthMax, invalid }
 
@@ -41,8 +42,8 @@ class Email extends FormzInput<String, EmailError?> {
     return null;
   }
 
-  Email copyWith(
-    String? value, {
+  Email copyWith({
+    String? value,
     bool? isRequired,
     bool? hardValidate,
   }) {
@@ -52,12 +53,4 @@ class Email extends FormzInput<String, EmailError?> {
       hardValidate: hardValidate ?? this.hardValidate,
     );
   }
-}
-
-bool validateEmail(String value) {
-  const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-
-  final regex = RegExp(pattern);
-
-  return regex.hasMatch(value);
 }

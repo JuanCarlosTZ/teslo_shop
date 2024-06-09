@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/feature/product/presentation/providers/products_repository_provider.dart';
 import 'package:teslo_shop/feature/product/products.dart';
 
 final productsProvider =

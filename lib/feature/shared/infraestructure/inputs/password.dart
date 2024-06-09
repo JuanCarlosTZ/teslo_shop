@@ -1,4 +1,5 @@
 import 'package:formz/formz.dart';
+import 'package:teslo_shop/config/config.dart';
 
 enum PasswordError { required, lengthMin, uppercase, lowercase, number }
 
@@ -56,8 +57,8 @@ class Password extends FormzInput<String, PasswordError?> {
     return null;
   }
 
-  Password copyWith(
-    String? value, {
+  Password copyWith({
+    String? value,
     bool? isRequired,
     bool? hardValidate,
   }) {
@@ -68,7 +69,3 @@ class Password extends FormzInput<String, PasswordError?> {
     );
   }
 }
-
-bool containsUppercase(String value) => RegExp(r'[A-Z]').hasMatch(value);
-bool containsLowercase(String value) => RegExp(r'[a-z]').hasMatch(value);
-bool containsNumber(String value) => RegExp(r'\d').hasMatch(value);

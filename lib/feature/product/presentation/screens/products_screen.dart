@@ -26,7 +26,9 @@ class ProductsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
         label: const Text('Nuevos productos'),
-        onPressed: () {},
+        onPressed: () {
+          context.push(PathParameter.productPathByNew);
+        },
       ),
     );
   }
@@ -87,8 +89,8 @@ class _ProductsViewState extends ConsumerState<_ProductsView> {
 
                       ///*Product Item
                       return GestureDetector(
-                          onTap: () =>
-                              context.go(PathParameter.productPath(product.id)),
+                          onTap: () => context
+                              .go(PathParameter.productPathById(product.id)),
                           child: _ProductItem(product: product));
                     },
                   ),
@@ -118,16 +120,21 @@ class _ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ClipRect(
-          clipBehavior: Clip.hardEdge,
-          child: FadeInImage.assetNetwork(
-            placeholder: 'assets/loaders/bottle-loader.gif',
-            image: product.images.first,
-            imageErrorBuilder: (context, error, stackTrace) {
-              return Image.asset('assets/images/no-image.jpg');
-            },
-          ),
-        ),
+        product.images.isEmpty
+            ? ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: Image.asset('assets/images/no-image.jpg',
+                    fit: BoxFit.cover))
+            : ClipRect(
+                clipBehavior: Clip.hardEdge,
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/loaders/bottle-loader.gif',
+                  image: product.images.first,
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return Image.asset('assets/images/no-image.jpg');
+                  },
+                ),
+              ),
         Text(product.title),
       ],
     );

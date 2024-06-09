@@ -38,8 +38,8 @@ class ConfirmPassword extends FormzInput<String, ConfirmPasswordError?> {
     return null;
   }
 
-  ConfirmPassword copyWith(
-    String? value, {
+  ConfirmPassword copyWith({
+    String? value,
     String? password,
     bool? isRequired,
   }) {
@@ -50,7 +50,3 @@ class ConfirmPassword extends FormzInput<String, ConfirmPasswordError?> {
     );
   }
 }
-
-bool containsUppercase(String value) => RegExp(r'[A-Z]').hasMatch(value);
-bool containsLowercase(String value) => RegExp(r'[a-z]').hasMatch(value);
-bool containsNumber(String value) => RegExp(r'\d').hasMatch(value);

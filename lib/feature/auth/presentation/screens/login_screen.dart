@@ -70,6 +70,7 @@ class _FormView extends ConsumerWidget {
           ///*Email
           CustomTextFormField(
             label: 'Correo',
+            required: loginForm.email.isRequired,
             onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
             errorMessage: !isPosted
                 ? null
@@ -80,6 +81,7 @@ class _FormView extends ConsumerWidget {
           ///*Password
           CustomTextFormField(
             label: 'Contraseña',
+            required: loginForm.password.isRequired,
             obscureText: true,
             onChanged: ref.read(loginFormProvider.notifier).onPasswordChange,
             onFieldSubmitted: (value) =>

@@ -5,6 +5,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? hint;
   final String? errorMessage;
   final bool obscureText;
+  final bool required;
   final TextInputType? keyboardType;
   final void Function(String)? onChanged;
   final String? Function(String?)? validator;
@@ -16,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hint,
     this.errorMessage,
     this.obscureText = false,
+    this.required = false,
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.validator,
@@ -47,7 +49,9 @@ class CustomTextFormField extends StatelessWidget {
     final customLabel = Row(
       children: [
         Text(label!),
-        Icon(Icons.star, color: Colors.red.shade700, size: 10)
+        required
+            ? Icon(Icons.star, color: Colors.red.shade700, size: 10)
+            : const SizedBox(),
       ],
     );
 

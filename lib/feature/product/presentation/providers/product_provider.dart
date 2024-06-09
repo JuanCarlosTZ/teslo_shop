@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:teslo_shop/feature/product/presentation/providers/products_repository_provider.dart';
+import 'package:teslo_shop/config/router/path_parameter.dart';
+import 'package:teslo_shop/feature/product/infraestructure/datasources/errors/product_error_handle.dart';
 import 'package:teslo_shop/feature/product/products.dart';
 
 final productProvider = StateNotifierProvider.autoDispose
@@ -38,15 +39,27 @@ class ProductNotifier extends StateNotifier<ProductState> {
     loadProduct();
   }
 
-  Future<void> loadProduct() async {
-    if (state.id == 'new') return;
+  Future<Product?> loadProduct() async {
+    try {
+      if (state.id == PathParameter.newProduct) return null;
 
-    final product = await loadProductCallback(state.id);
+      state = state.copyWith(
+        isLoading: true,
+      );
 
-    state = state.copyWith(
-      product: product,
-      isLoading: false,
-    );
+      final product = await loadProductCallback(state.id);
+
+      state = state.copyWith(
+        product: product,
+        isLoading: false,
+      );
+      return product;
+    } catch (e) {
+      final errorMessage = ProductErrorHandle.getErrorMessage(e as Exception);
+      state = state.copyWith(notification: errorMessage);
+      state = state.copyWith();
+      return null;
+    }
   }
 
   Future<bool> postProduct({required ProductPayload productPayload}) async {
@@ -64,6 +77,8 @@ class ProductNotifier extends StateNotifier<ProductState> {
         isPosting: false,
       );
     } catch (e) {
+      final errorMessage = ProductErrorHandle.getErrorMessage(e as Exception);
+      state = state.copyWith(notification: errorMessage);
       state = state.copyWith(isPosting: false);
       return false;
     }
@@ -76,12 +91,14 @@ class ProductState {
   final Product? product;
   final bool isLoading;
   final bool isPosting;
+  final String? notification;
 
   ProductState({
     this.id = '',
     this.product,
-    this.isLoading = true,
+    this.isLoading = false,
     this.isPosting = false,
+    this.notification,
   });
 
   ProductState copyWith({
@@ -89,12 +106,14 @@ class ProductState {
     Product? product,
     bool? isLoading,
     bool? isPosting,
+    String? notification,
   }) {
     return ProductState(
       id: id ?? this.id,
       product: product ?? this.product,
       isLoading: isLoading ?? this.isLoading,
       isPosting: isPosting ?? this.isPosting,
+      notification: notification,
     );
   }
 }

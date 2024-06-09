@@ -3,3 +3,4 @@ export 'package:teslo_shop/feature/shared/widgets/custom_geometrical_view.dart';
 export 'package:teslo_shop/feature/shared/widgets/custom_text_form_field.dart';
 export 'package:teslo_shop/feature/shared/widgets/geometrical_background.dart';
 export 'package:teslo_shop/feature/shared/widgets/side_menu.dart';
+export 'custom_product_field.dart';
