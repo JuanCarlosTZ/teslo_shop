@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/feature/product/presentation/providers/product_form_provider.dart';
 
 import 'package:teslo_shop/feature/product/products.dart';
+import 'package:teslo_shop/feature/shared/infraestructure/services/image_service_impl.dart';
 import 'package:teslo_shop/feature/shared/shared.dart';
 
 class ProductScreen extends ConsumerWidget {
@@ -31,10 +34,33 @@ class ProductScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Producto'),
-        actions: const [Icon(Icons.camera_alt_outlined), SizedBox(width: 15)],
+        actions: [
+          IconButton(
+              onPressed: () async {
+                final photoPath = await ImageServiceImpl().takePhoto();
+                if (photoPath == null) return;
+
+                ref
+                    .read(productFormProvider(productId).notifier)
+                    .updateProductImage(photoPath);
+              },
+              icon: const Icon(Icons.camera_alt_outlined)),
+          IconButton(
+            onPressed: () async {
+              final photoPath = await ImageServiceImpl().selectPhoto();
+              if (photoPath == null) return;
+
+              ref
+                  .read(productFormProvider(productId).notifier)
+                  .updateProductImage(photoPath);
+            },
+            icon: const Icon(Icons.photo_library_outlined),
+          ),
+          const SizedBox(width: 15),
+        ],
       ),
       body: productState.isLoading
-          ? const _LoadingFullView()
+          ? const LoadingFullView()
           : productState.product == null &&
                   productId != PathParameter.newProduct
               ? _ProductNotFoudView(productId)
@@ -75,19 +101,6 @@ class _ProductNotFoudView extends StatelessWidget {
     return SizedBox.expand(
       child: Center(
         child: Text('Not found product: $productId'),
-      ),
-    );
-  }
-}
-
-class _LoadingFullView extends StatelessWidget {
-  const _LoadingFullView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.expand(
-      child: Center(
-        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -287,26 +300,37 @@ class _ImageGallery extends StatelessWidget {
     return PageView(
       scrollDirection: Axis.horizontal,
       controller: PageController(viewportFraction: 0.7),
-      children: images.isEmpty
-          ? [
-              ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Image.asset('assets/images/no-image.jpg',
-                      fit: BoxFit.cover))
-            ]
-          : images.map((e) {
-              return ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                child: FadeInImage.assetNetwork(
-                  placeholder: 'assets/loaders/bottle-loader.gif',
-                  image: e,
-                  fit: BoxFit.cover,
-                  imageErrorBuilder: (context, error, stackTrace) {
-                    return Image.asset('assets/images/no-image.jpg');
-                  },
-                ),
-              );
-            }).toList(),
+      children: images.map((imageItem) {
+        if (imageItem.isEmpty) {
+          return ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child:
+                  Image.asset('assets/images/no-image.jpg', fit: BoxFit.cover));
+        }
+
+        late final ImageProvider imageProvider;
+
+        if (imageItem.contains('http')) {
+          imageProvider = NetworkImage(imageItem);
+        } else {
+          imageProvider = FileImage(File(imageItem));
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/loaders/bottle-loader.gif'),
+              image: imageProvider,
+              fit: BoxFit.cover,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/images/no-image.jpg');
+              },
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

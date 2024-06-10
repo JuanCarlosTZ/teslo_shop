@@ -17,6 +17,7 @@ class PathParameter {
   static String get loginPath => '/$login';
   static String get registerPath => '/$login/$register';
 
+  static String get fileProductPath => '/files/product';
   static String get productPath => '$product/:$productId';
   static String get productPathByNew => '$productsPath/$product/$newProduct';
   static String productPathById(String thisProductId) {

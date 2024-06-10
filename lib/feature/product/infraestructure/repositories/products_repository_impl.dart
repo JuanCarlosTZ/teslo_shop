@@ -30,4 +30,14 @@ class ProductsRepositoryImpl extends ProductsRepository {
   Future<List<Product>> searchProductByTerm(String term) async {
     return await _datasource.searchProductByTerm(term);
   }
+
+  @override
+  Future<String> uploadFile(String path) async {
+    return await _datasource.uploadFile(path);
+  }
+
+  @override
+  Future<List<String>> uploadFiles(List<String> paths) async {
+    return await _datasource.uploadFiles(paths);
+  }
 }

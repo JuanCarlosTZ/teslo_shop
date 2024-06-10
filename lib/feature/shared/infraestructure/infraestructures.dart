@@ -1,3 +1,3 @@
-export '../infraestructure/repositories/key_value_preference_repository_impl.dart';
+export 'package:teslo_shop/feature/shared/infraestructure/services/shared_preference_service_impl.dart';
 
 export '../infraestructure/inputs/inputs.dart';

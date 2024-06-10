@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/feature/auth/domain/domains.dart';
 import 'package:teslo_shop/feature/auth/infraestructure/infraestructures.dart';
-import 'package:teslo_shop/feature/shared/infraestructure/infraestructures.dart';
+
+import 'package:teslo_shop/feature/shared/shared.dart';
 
 final authUserProvider = StateNotifierProvider<AuthUserNotifier, AuthUserState>(
   (ref) {
     final authRepository = AuthRepositoryImpl();
-    final prefsRepository = KeyValuePreferenceRepositoryImpl();
+    final prefsRepository = SharedPreferenceServiceImpl();
     return AuthUserNotifier(
       authRepository: authRepository,
       prefsRepository: prefsRepository,
@@ -17,7 +18,7 @@ final authUserProvider = StateNotifierProvider<AuthUserNotifier, AuthUserState>(
 
 class AuthUserNotifier extends StateNotifier<AuthUserState> {
   final AuthRepository authRepository;
-  final KeyValuePreferenceRepositoryImpl prefsRepository;
+  final SharedPreferenceServiceImpl prefsRepository;
   AuthUserNotifier({
     required this.authRepository,
     required this.prefsRepository,

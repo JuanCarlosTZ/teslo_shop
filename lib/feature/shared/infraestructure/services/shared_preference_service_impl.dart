@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../domain/datasources/key_value_preference_datasource.dart';
+import '../../domain/services/key_value_preference_service.dart';
 
-class SharePreferenceDatasource extends KeyValuePreferenceDatasource {
+class SharedPreferenceServiceImpl extends KeyValuePreferenceService {
   Future<SharedPreferences> getSharedPreference() async {
     return await SharedPreferences.getInstance();
   }

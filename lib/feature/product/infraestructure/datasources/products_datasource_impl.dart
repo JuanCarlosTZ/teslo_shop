@@ -20,6 +20,34 @@ class ProductsDatasourceImpl extends ProductsDatasource {
         ));
 
   @override
+  Future<String> uploadFile(String path) async {
+    return await ProductErrorHandle.handleDioError(() async {
+      final fileName = path.split('/').last;
+      final FormData data = FormData.fromMap(
+          {'file': MultipartFile.fromFileSync(path, filename: fileName)});
+
+      final response = await db.post(PathParameter.fileProductPath, data: data);
+
+      final image = response.data['image'];
+      return image;
+    });
+  }
+
+  @override
+  Future<List<String>> uploadFiles(List<String> paths) async {
+    final imagesToUpload = paths.where((image) => image.contains('/')).toList();
+    final imagesUploaded =
+        paths.where((image) => !image.contains('/')).toList();
+
+    if (imagesToUpload.isEmpty) return paths;
+
+    final newFilesUplaoded =
+        await Future.wait(imagesToUpload.map(uploadFile).toList());
+
+    return [...imagesUploaded, ...newFilesUplaoded];
+  }
+
+  @override
   Future<Product> createUpdateProduct(Map<String, dynamic> productLike) async {
     return await ProductErrorHandle.handleDioError(() async {
       final String? productId = productLike['id'];
@@ -32,6 +60,11 @@ class ProductsDatasourceImpl extends ProductsDatasource {
 
       productLike.remove('id');
       productLike.remove('user');
+
+      final images = List<String>.from(productLike['images']);
+      if (images.isNotEmpty) {
+        productLike['images'] = await uploadFiles(images);
+      }
 
       final response = await db.request(url,
           data: productLike, options: Options(method: method));

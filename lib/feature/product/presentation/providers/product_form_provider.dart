@@ -79,6 +79,10 @@ class ProductFormNotifier extends StateNotifier<ProductFormState> {
     state = state.copyWith(images: value);
   }
 
+  void updateProductImage(String image) {
+    state = state.copyWith(images: [...state.images, image]);
+  }
+
   Future<bool> postProduct() async {
     if (!_validatePayload()) return false;
 
